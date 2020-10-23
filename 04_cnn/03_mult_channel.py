@@ -34,3 +34,19 @@ def corr2d_multi_in_out(x, k):
 k = nd.stack(k, k + 1, k + 2)
 y = corr2d_multi_in_out(x, k)
 print(y)
+
+# 1×1卷积层
+def corr2d_multi_in_out_1x1(x, k):
+	c_i, h, w = x.shape
+	c_o = k.shape[0]
+	x = x.reshape((c_i, h * w))
+	k = k.reshape((c_o, c_i))
+	y = nd.dot(k, x)
+	return y.reshape((c_o, h, w))
+
+x = nd.random.uniform(shape=(3, 3, 3))
+k = nd.random.uniform(shape=(2, 3, 1, 1))
+
+y1 = corr2d_multi_in_out_1x1(x, k)
+y2 = corr2d_multi_in_out(x, k)
+print((y1 - y2).norm().asscalar() < 1e-6)
