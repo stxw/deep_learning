@@ -1,5 +1,11 @@
-from mxnet import gluon, init, nd
+#coding=utf-8
+import os, sys
+import time
+import mxnet as mx
+from mxnet import gluon, init, nd, autograd
 from mxnet.gluon import nn
+from mxnet.gluon import data as g_data
+from mxnet.gluon import loss as g_loss
 
 # NiN块
 def nin_block(num_channels, kernel_size, strides, padding):
@@ -64,9 +70,6 @@ def load_data_fashion_mnist(batch_size, resize=None,
 		shuffle=False, num_workers=num_workers)
 	return train_iter, test_iter
 
-batch_size = 128
-train_iter, test_iter = load_data_fashion_mnist(batch_size, resize=224)
-
 def evaluate_accuracy(data_iter, net, ctx):
 	acc_sum, n = nd.array([0], ctx=ctx), 0
 	for x, y in data_iter:
@@ -101,4 +104,12 @@ def train(net, train_iter, test_iter, batch_size, trainer, num_epochs, ctx=mx.cp
 			% (epoch + 1, train_l_sum / n, train_acc_sum / n, test_acc, 
 			time.time() - start))
 
-
+lr = 0.1
+num_epochs = 5
+batch_size = 128
+ctx = try_gpu(7)
+batch_size = 128
+train_iter, test_iter = load_data_fashion_mnist(batch_size, resize=224)
+net.initialize(force_reinit=True, ctx=ctx, init=init.Xavier())
+trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': lr})
+train(net, train_iter, test_iter, batch_size, trainer, num_epochs, ctx=ctx)
