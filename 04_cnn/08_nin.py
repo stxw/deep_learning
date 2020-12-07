@@ -108,7 +108,6 @@ lr = 0.1
 num_epochs = 5
 batch_size = 128
 ctx = try_gpu(7)
-batch_size = 128
 train_iter, test_iter = load_data_fashion_mnist(batch_size, resize=224)
 net.initialize(force_reinit=True, ctx=ctx, init=init.Xavier())
 trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': lr})
