@@ -83,7 +83,8 @@ def load_data_fashion_mnist(batch_size):
 	mnist_test = gdata.vision.FashionMNIST(train=False)
 	transformer = gdata.vision.transforms.ToTensor()
 	batch_size = batch_size
-	train_iter = gdata.DataLoader(mnist_train.transform_first(transformer), 	batch_size=batch_size, shuffle=True, num_workers=0)
+	train_iter = gdata.DataLoader(mnist_train.transform_first(transformer), 
+		batch_size=batch_size, shuffle=True, num_workers=0)
 	test_iter = gdata.DataLoader(mnist_test.transform_first(transformer),
 		batch_size=batch_size, shuffle=False, num_workers=0)
 	return train_iter, test_iter
